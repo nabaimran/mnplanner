@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Final Year Study Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f6f8;--card:#fff;--ink:#14232e;--mut:#5d7080;--line:#d9e1e7;--cle:#8a3b8f;--iot:#0d8a7a;--res:#c9741a;--all:#2c4f8f;--busy:#fde8e0;--busyi:#a8431f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a22;--card:#17262f;--ink:#e7eef3;--mut:#93a6b4;--line:#27394544;--line:#2b3d49;--cle:#d58bda;--iot:#4cc7b5;--res:#f0a35a;--all:#8fb2ee;--busy:#3a2620;--busyi:#ffb391}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+main{max-width:860px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:clamp(1.7rem,5vw,2.4rem);margin:0 0 4px;font-weight:800;letter-spacing:-.02em}
+.sub{color:var(--mut);margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:14px}
+.strip{display:flex;gap:3px;margin:10px 0 4px}
+.strip a{flex:1;height:26px;border-radius:4px;background:var(--line);position:relative;overflow:hidden;text-decoration:none;color:inherit}
+.strip a i{position:absolute;left:0;bottom:0;top:0;background:var(--all);opacity:.85}
+.strip a b{position:absolute;inset:0;display:grid;place-items:center;font-size:.7rem;font-weight:600;color:var(--ink);mix-blend-mode:normal}
+.strip a.now{outline:2px solid var(--ink);outline-offset:1px}
+.strip a.busy{background:var(--busy)}
+.legend{font-size:.8rem;color:var(--mut)}
+.bars{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.bar{font-size:.9rem}.bar .t{height:8px;background:var(--line);border-radius:5px;overflow:hidden;margin-top:4px}.bar .t i{display:block;height:100%;width:0;transition:width .3s}
+.dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px}
+.dl div{border-left:4px solid var(--c);padding:4px 10px;font-size:.9rem}
+.dl input{font:inherit;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:2px 6px}
+.dl .n{font-weight:600}.dl .d{color:var(--mut);font-size:.8rem}
+.cle{--c:var(--cle)}.iot{--c:var(--iot)}.res{--c:var(--res)}.all{--c:var(--all)}
+.wk{border-left:5px solid var(--all)}
+.wk.busy{background:var(--busy)}
+.wk h2{font-size:1.05rem;margin:0;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;justify-content:space-between}
+.wk h2 span{font-weight:400;font-size:.82rem;color:var(--mut)}
+.tag{font-size:.75rem;border-radius:20px;padding:1px 9px;border:1px solid var(--line)}
+.tag.b{background:var(--busyi);color:#fff;border-color:transparent}
+.wk .tag.b{background:var(--busyi)}
+ul{list-style:none;padding:0;margin:10px 0 6px}
+li label{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+li input{margin-top:5px;width:18px;height:18px;accent-color:var(--c);flex:none}
+li .m{flex:none;font-size:.72rem;font-weight:600;color:#fff;background:var(--c);border-radius:4px;padding:1px 6px;margin-top:3px;min-width:42px;text-align:center}
+li.done span.x{text-decoration:line-through;color:var(--mut)}
+li .h{color:var(--mut);font-size:.78rem;white-space:nowrap}
+textarea{width:100%;font:inherit;font-size:.85rem;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:6px 8px;resize:vertical;min-height:34px}
+button{font:inherit;font-size:.8rem;background:none;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:3px 10px;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--all);outline-offset:2px}
+.note{font-size:.85rem;color:var(--mut)}
+.rules li{padding:3px 0;font-size:.9rem}
+.whorow{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-bottom:4px}
+.tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+button[aria-pressed="true"]{background:var(--all);color:#fff;border-color:transparent}
+.tabs button{font-size:.95rem;padding:6px 16px}
+.avl{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0}
+select,.add input{font:inherit;font-size:.85rem;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:3px 6px}
+.add{display:flex;gap:6px;margin:8px 0}.add input{flex:1;min-width:0}
+.chip{margin-left:auto;flex:none;font-size:.7rem;font-weight:600;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);color:var(--mut)}
+.chip.on{background:var(--iot);color:#fff;border-color:transparent}
+.chip:first-of-type{margin-left:auto}.chip+.chip{margin-left:4px}
+li label input:disabled{opacity:.5}
+</style>
+</head>
+<body>
+<main>
+<h1>Naba &amp; Mariyam’s study tracker</h1>
+<p class="sub">Semester 1 · target 75%+ · 26 Oct 2026 to 8 Jan 2027</p>
+<div class="card"><div class="whorow"><b>Who’s using this?</b><span id="who"></span></div><div class="note" id="hint"></div></div>
+<div class="tabs" id="tabs"></div>
+
+<div class="card">
+<div id="count" style="font-weight:600"></div>
+<div class="strip" id="strip"></div>
+<div class="legend">Each block is a week. On a personal tab the fill shows that person’s ticks, and on Together it shows tasks you have both finished. A pink block means one of you is busy or away that week. Set your own weeks on your page.</div>
+</div>
+
+<div class="card"><div class="bars" id="bars"></div></div>
+
+<div class="card">
+<div style="font-weight:600;margin-bottom:6px">Deadlines <span class="note">(edit the dates once you have the real ones)</span></div>
+<div class="dl" id="dl"></div>
+</div>
+
+<div id="weeks"></div>
+
+<div class="card">
+<div style="font-weight:600">Rules for the paper and talk</div>
+<ul class="rules">
+<li>Research Paper: no generative AI at all. Spell and grammar checkers are fine, but recheck every quote and reference afterwards.</li>
+<li>Lightning Talk: AI is allowed only for visuals built from your own ideas. Evaluate and edit anything it makes, and include an acknowledgement line and reference.</li>
+<li>Keep 3,600 to 4,400 words for the paper, take your names off every file, and submit through Turnitin with Harvard references.</li>
+<li>Talk: aim for 5 minutes (7 maximum), recorded, then fill in the Google form. Expect viva questions on your method and results.</li>
+</ul>
+<button id="reset">Reset my progress</button>
+<p class="note">Naba’s and Mariyam’s pages are separate, and only the owner can change their own. Both of you see each other’s progress on the Together tab. Your changes sync when the page is shared with edit access, and are always kept on this device.</p>
+</div>
+</main>
+<script>
+var M={cle:"Cyber law",iot:"IoT",res:"Research",all:"Both"};
+var DL=[
+{k:"cle1",m:"cle",n:"Cybercrime, Law & Ethics: Assessment 1",d:"2026-11-16"},
+{k:"iot1",m:"iot",n:"Securing IoT: S1 Portfolio Presentation",d:"2026-11-16"},
+{k:"cle2",m:"cle",n:"Cybercrime, Law & Ethics: Assessment 2",d:"2027-01-05"},
+{k:"iot2",m:"iot",n:"Securing IoT: S2 Security Solution report",d:"2027-01-05"},
+{k:"res",m:"res",n:"Research: Lightning Talk and Paper",d:"2027-01-08"}];
+var W=[
+{s:"2026-10-26",n:2,busy:0,note:"Kick-off week. Two full sessions.",t:[
+["all","Fix the real deadlines and word counts above, and find the Cybercrime briefs",.5],
+["res","Confirm your research question and scope with your tutor",1],
+["res","Make a shared Harvard reference list (one sheet for all modules)",1],
+["cle","Read Assessment 1 brief, list the topics and cases you need",1.5],
+["iot","Choose your IoT case study for the portfolio and sketch the slide outline",2]]},
+{s:"2026-11-02",n:2,busy:0,note:"Research week for the two November deadlines.",t:[
+["cle","Research and take notes for Assessment 1, with sources logged",3],
+["iot","Gather evidence: architecture, vulnerabilities, threat actors, ethics",3],
+["res","Find and skim 5 key sources for the paper",1.5]]},
+{s:"2026-11-09",n:2,busy:0,note:"Deadline week. Finish, proofread and submit by Mon 16 Nov.",t:[
+["cle","Write Assessment 1 and check references and word count",3],
+["iot","Finish portfolio slides, rehearse out loud once",3],
+["all","Submit both, with names removed and files checked (Turnitin)",.5]]},
+{s:"2026-11-16",n:1,busy:1,note:"Events month. One light session only.",t:[
+["all","Rest and review: note what went well or badly on both pieces",.5],
+["res","Read and note 4 more sources",2]]},
+{s:"2026-11-23",n:1,busy:1,note:"Events and travel. One session.",t:[
+["cle","Read Assessment 2 brief (once it is decided) and plan the structure",1.5],
+["res","Write literature review notes grouped by theme",2]]},
+{s:"2026-11-30",n:1,busy:1,note:"One session plus one catch-up if you have time.",t:[
+["res","Decide methodology and write a one-page plan",2],
+["iot","Read S2 brief, pick the system and threats to cover, outline the report",2]]},
+{s:"2026-12-07",n:2,busy:0,note:"Two sessions. Best window before mid-December events.",t:[
+["res","Draft the introduction and literature review (about 1,200 words)",3],
+["iot","Research for the S2 report and write the first half",3],
+["cle","Research for Assessment 2",1.5]]},
+{s:"2026-12-14",n:1,busy:1,note:"Mid-December events. Keep it small.",t:[
+["res","Draft the methodology section (about 600 words)",2],
+["cle","Gather sources and write a detailed outline for Assessment 2",2]]},
+{s:"2026-12-21",n:2,busy:0,note:"Holiday push. Get every first draft done this week.",t:[
+["res","Draft findings and discussion (about 1,800 words)",4],
+["iot","Finish the S2 report draft",3],
+["cle","Write the Assessment 2 first draft",3]]},
+{s:"2026-12-28",n:2,busy:0,note:"Edit week. Do not start anything new.",t:[
+["res","Draft conclusion and abstract, then edit the whole paper to 3,600-4,400 words",4],
+["iot","Edit the S2 report, tighten the recommendations, and check references",2.5],
+["cle","Edit Assessment 2 and check references",2.5],
+["res","Trade drafts with your partner for feedback (ideas and structure only)",1]]},
+{s:"2027-01-04",n:2,busy:0,note:"Final week. Modules due 5 Jan, research due 8 Jan.",t:[
+["cle","Submit Assessment 2 (Turnitin, no name)",.5],
+["iot","Submit S2 report (Turnitin, no name)",.5],
+["res","Final proofread, references and word count, then submit the paper",2],
+["res","Build lightning talk slides (question, method, findings, why it matters)",2],
+["res","Rehearse to 5 minutes, then record and fill in the Google form",2],
+["res","Prepare for viva: methodology choices, limits, what you would do next",1.5]]}];
+var P=["naba","mariyam"],NM={naba:"Naba",mariyam:"Mariyam"},AVL={free:"Free",busy:"Busy",away:"Away"};
+function blank(){return{chk:{},av:{},notes:{},todo:[]}}
+var KEY="studytracker.v2",S={naba:blank(),mariyam:blank(),shared:{dl:{}}},me=null,tab="together",db=null;
+try{var r=localStorage.getItem(KEY);if(r){var o=JSON.parse(r);P.forEach(function(p){S[p]=Object.assign(blank(),o[p]||{})});S.shared=Object.assign({dl:{}},o.shared||{})}me=localStorage.getItem("tr.me")}catch(e){}
+if(me!=="naba"&&me!=="mariyam")me=null;
+if(me)tab=me;
+function persist(id){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(db)db.doc("tracker/"+id).set(S[id]).catch(function(){})}
+function $(i){return document.getElementById(i)}
+function fd(s){return new Date(s+"T00:00:00")}
+function fmt(d){return d.toLocaleDateString("en-GB",{day:"numeric",month:"short"})}
+var now=new Date();now.setHours(0,0,0,0);
+function dstr(k,d){return S.shared.dl[k]||d}
+function av(p,i){return S[p].av[i]||(W[i].busy?"busy":"free")}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;")}
+function editing(){var a=document.activeElement;return a&&(a.tagName==="TEXTAREA"||(a.tagName==="INPUT"&&a.type!=="checkbox")||a.tagName==="SELECT")}
+function renderTop(){
+var tot=0,cnt={naba:0,mariyam:0},both=0;
+W.forEach(function(w,i){w.t.forEach(function(t,j){var k=i+"-"+j;tot++;var a=!!S.naba.chk[k],b=!!S.mariyam.chk[k];if(a)cnt.naba++;if(b)cnt.mariyam++;if(a&&b)both++})});
+$("who").innerHTML=P.map(function(p){return '<button data-me="'+p+'" aria-pressed="'+(me===p)+'">I’m '+NM[p]+'</button>'}).join(" ");
+$("hint").textContent=me?"Signed in as "+NM[me]+". You can tick tasks and edit your own page.":"Pick who you are to tick tasks and edit your page. Until then you can only look.";
+$("tabs").innerHTML=["naba","mariyam","together"].map(function(t){return '<button data-tab="'+t+'" aria-pressed="'+(tab===t)+'">'+(t==="together"?"Together":NM[t]+(me===t?" (you)":""))+'</button>'}).join("");
+var nxt=DL.map(function(d){return{d:d,t:fd(dstr(d.k,d.d))}}).filter(function(x){return x.t>=now}).sort(function(a,b){return a.t-b.t})[0];
+$("count").textContent=nxt?Math.round((nxt.t-now)/864e5)+" days until the next deadline: "+nxt.d.n+" ("+fmt(nxt.t)+")":"All deadlines have passed.";
+var st=$("strip");st.innerHTML="";
+W.forEach(function(w,i){var ws=fd(w.s),we=new Date(ws.getTime()+6*864e5),n=w.t.length,d=0;
+w.t.forEach(function(t,j){var k=i+"-"+j;if(P.indexOf(tab)>=0?S[tab].chk[k]:(S.naba.chk[k]&&S.mariyam.chk[k]))d++});
+var busy=P.some(function(p){return av(p,i)!=="free"});
+var a=document.createElement("a");a.href="#w"+i;a.title="Week of "+fmt(ws)+": "+d+"/"+n+" done";
+a.className=(now>=ws&&now<=we?"now ":"")+(busy?"busy":"");
+a.innerHTML='<i style="width:'+(100*d/n)+'%"></i><b>'+(i+1)+'</b>';st.appendChild(a)});
+function bar(l,v,c){return '<div class="bar" style="--c:var(--'+c+')"><b>'+l+'</b> '+v+"/"+tot+'<div class="t"><i style="background:var(--c);width:'+(100*v/tot)+'%"></i></div></div>'}
+$("bars").innerHTML=bar("Naba",cnt.naba,"cle")+bar("Mariyam",cnt.mariyam,"iot")+bar("Both finished",both,"all");
+var dl=$("dl");if(!editing()||!dl.children.length){dl.innerHTML="";DL.forEach(function(d){var e=document.createElement("div");e.className=d.m;
+e.innerHTML='<div class="n">'+d.n+'</div><input type="date" aria-label="Deadline for '+d.n+'" value="'+dstr(d.k,d.d)+'"'+(me?"":" disabled")+'>';
+e.querySelector("input").onchange=function(ev){if(ev.target.value){S.shared.dl[d.k]=ev.target.value;persist("shared");renderTop()}};dl.appendChild(e)})}
+}
+function weeks(){
+var wr=$("weeks");wr.innerHTML="";var pt=P.indexOf(tab)>=0,own=pt&&me===tab;
+W.forEach(function(w,i){var ws=fd(w.s),we=new Date(ws.getTime()+6*864e5),hrs=0;w.t.forEach(function(t){hrs+=t[2]});
+var busy=P.some(function(p){return av(p,i)!=="free"});
+var c=document.createElement("div");c.className="card wk"+(busy?" busy":"");c.id="w"+i;
+var h='<h2>Week '+(i+1)+': '+fmt(ws)+' to '+fmt(we)+'<span>'+w.n+(w.n>1?' sessions':' session')+' · about '+hrs+' h</span></h2><div class="note">'+w.note+'</div>';
+h+='<div class="avl">'+P.map(function(p){var a=av(p,i);return '<span class="tag'+(a!=="free"?" b":"")+'">'+NM[p]+': '+AVL[a]+'</span>'}).join(" ");
+if(own)h+=' <label class="note">Your week <select data-av="'+i+'">'+Object.keys(AVL).map(function(k){return '<option value="'+k+'"'+(av(tab,i)===k?" selected":"")+'>'+AVL[k]+'</option>'}).join("")+'</select></label>';
+h+='</div><ul>';
+w.t.forEach(function(t,j){var k=i+"-"+j,p=pt?tab:me,ck=p&&S[p].chk[k],dis=!me||(pt&&me!==tab);
+h+='<li class="'+t[0]+(ck?' done':'')+'"><label><input type="checkbox" data-k="'+k+'" data-p="'+(p||"")+'"'+(ck?' checked':'')+(dis||!p?' disabled':'')+'><span class="m">'+M[t[0]]+'</span><span class="x">'+t[1]+' <span class="h">('+t[2]+' h)</span></span>';
+if(!pt)h+=P.map(function(q){return '<span class="chip'+(S[q].chk[k]?' on':'')+'" title="'+NM[q]+'">'+NM[q].charAt(0)+'</span>'}).join("");
+h+='</label></li>'});
+h+='</ul>';
+if(pt){var tds=S[tab].todo.map(function(x,n){return x.w===i?'<li class="all'+(x.d?' done':'')+'"><label><input type="checkbox" data-td="'+n+'"'+(x.d?' checked':'')+(own?'':' disabled')+'><span class="m">Mine</span><span class="x">'+esc(x.t)+'</span></label>'+(own?' <button data-del="'+n+'" aria-label="Remove">Remove</button>':'')+'</li>':''}).join("");
+if(tds)h+='<ul>'+tds+'</ul>';
+if(own)h+='<div class="add"><input type="text" data-addt="'+i+'" placeholder="'+(tab==="naba"?"Add your own task or commitment, e.g. council event, internship day":"Add your own task or commitment, e.g. committee event, Pakistan trip")+'"><button data-add="'+i+'">Add</button></div><textarea data-n="'+i+'" placeholder="Notes for this week">'+esc(S[tab].notes[i]||"")+'</textarea>';
+else if(S[tab].notes[i])h+='<div class="note">Notes: '+esc(S[tab].notes[i])+'</div>'}
+c.innerHTML=h;wr.appendChild(c)});
+}
+function render(soft){renderTop();if(!(soft&&editing()))weeks()}
+$("weeks").addEventListener("change",function(e){var t=e.target,k=t.getAttribute("data-k"),i;
+if(k&&t.dataset.p&&t.dataset.p===me){S[me].chk[k]=t.checked;persist(me);renderTop();weeks();var f=document.querySelector('[data-k="'+k+'"]');if(f)f.focus()}
+else if((i=t.getAttribute("data-av"))!==null&&me===tab){S[me].av[i]=t.value;persist(me);renderTop();weeks()}
+else if((i=t.getAttribute("data-td"))!==null&&me===tab){S[me].todo[+i].d=t.checked;persist(me);weeks()}
+else if((i=t.getAttribute("data-n"))!==null&&me===tab){S[me].notes[i]=t.value;persist(me)}});
+function addTask(i){var inp=document.querySelector('[data-addt="'+i+'"]');if(!inp||!inp.value.trim()||me!==tab)return;S[me].todo.push({w:+i,t:inp.value.trim(),d:false});persist(me);weeks()}
+$("weeks").addEventListener("click",function(e){var b=e.target.closest("button");if(!b||me!==tab)return;
+if(b.getAttribute("data-add")!==null)addTask(b.getAttribute("data-add"));
+else if(b.getAttribute("data-del")!==null){S[me].todo.splice(+b.getAttribute("data-del"),1);persist(me);weeks()}});
+$("weeks").addEventListener("keydown",function(e){var i=e.target.getAttribute&&e.target.getAttribute("data-addt");if(i!==null&&i!==undefined&&e.key==="Enter")addTask(i)});
+document.addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
+if(b.dataset.me){me=b.dataset.me;tab=me;try{localStorage.setItem("tr.me",me)}catch(x){}render()}
+else if(b.dataset.tab){tab=b.dataset.tab;render()}});
+$("reset").onclick=function(){if(!me){alert("Pick who you are first.");return}if(confirm("Clear all your ticks, notes, tasks and week settings, "+NM[me]+"?")){S[me]=blank();persist(me);render()}};
+render();
+try{if(window.claude&&claude.use)claude.use("db").then(function(d){if(!d)return;db=d;["naba","mariyam","shared"].forEach(function(id){d.doc("tracker/"+id).onSnapshot(function(s){if(s.exists){var v=s.data();S[id]=id==="shared"?Object.assign({dl:{}},v):Object.assign(blank(),v);try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}render(true)}},function(){})})}).catch(function(){})}catch(e){}
+</script>
+</body>
+</html>
